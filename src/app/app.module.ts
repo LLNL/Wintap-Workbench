@@ -19,11 +19,14 @@ import { DatePipe } from '@angular/common';
 import { ChipModule } from "primeng/chip";
 import { DialogModule } from 'primeng/dialog';
 import { CommonModule } from '@angular/common';
+import { TreeviewComponent } from './treeview/treeview.component';
+import { TreeTableModule } from 'primeng/treetable';
+import { BadgeModule } from 'primeng/badge';
 
 
 @NgModule({
     declarations: [
-        AppComponent, NotfoundComponent, QuerybuilderComponent
+        AppComponent, NotfoundComponent, QuerybuilderComponent, TreeviewComponent
     ],
     imports: [
         AppRoutingModule,
@@ -40,7 +43,9 @@ import { CommonModule } from '@angular/common';
         InputTextModule,
         ChipModule,
         DialogModule,
-        CommonModule
+        TreeTableModule,
+        CommonModule,
+        BadgeModule
     ],
     providers: [
         DatePipe,

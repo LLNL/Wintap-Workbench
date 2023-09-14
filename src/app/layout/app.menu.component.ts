@@ -2,6 +2,7 @@ import { OnInit } from '@angular/core';
 import { Component } from '@angular/core';
 import { LayoutService } from './service/app.layout.service';
 import { QuerybuilderComponent } from '../querybuilder/querybuilder.component';
+import { TreeviewComponent } from '../treeview/treeview.component';
 
 @Component({
     selector: 'app-menu',
@@ -22,14 +23,14 @@ export class AppMenuComponent implements OnInit {
                 ]
             },
             {
-                label: 'Workbench Tools',
+                label: 'Tools',
                 items: [
-                    { label: 'Query Builder', icon: 'pi pi-fw pi-database', routerLink: ['/querybuilder'] },
-                    // { label: 'ETW Explorer', icon: 'pi pi-fw pi-compass', routerLink: ['/uikit/input'] },
+                    { label: 'Esper Workbench', icon: 'pi pi-fw pi-bolt', routerLink: ['/querybuilder'] },
+                    { label: 'Process Tree Viewer', icon: 'pi pi-fw pi-sitemap', routerLink: ['/treeview'] },
                 ]
             },
             {
-                label: 'Get Started',
+                label: 'Reference',
                 items: [
                     {
                         label: 'Documentation', icon: 'pi pi-fw pi-question', routerLink: ['/documentation']

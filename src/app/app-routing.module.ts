@@ -3,6 +3,7 @@ import { NgModule } from '@angular/core';
 import { NotfoundComponent } from './notfound/notfound.component';
 import { AppLayoutComponent } from "./layout/app.layout.component";
 import { QuerybuilderComponent } from './querybuilder/querybuilder.component';
+import { TreeviewComponent } from './treeview/treeview.component';
 
 @NgModule({
     imports: [
@@ -12,6 +13,7 @@ import { QuerybuilderComponent } from './querybuilder/querybuilder.component';
                 children: [
                     { path: '', loadChildren: () => import('./dashboard/dashboard.module').then(m => m.DashboardModule) },
                     { path: 'querybuilder', component: QuerybuilderComponent },
+                    { path: 'treeview', component: TreeviewComponent },
                     { path: 'documentation', loadChildren: () => import('./documentation/documentation.module').then(m => m.DocumentationModule) },
                 ]
             },
