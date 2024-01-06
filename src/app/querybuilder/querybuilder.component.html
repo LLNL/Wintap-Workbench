@@ -1,25 +1,5 @@
-<div class="grid">
-    <div class="col-6 xl:col-6">
-        <div class="card">
-            <span class="block text-500 font-medium mb-3">Esper Query Editor</span>
-            <div class="field">
-                <label htmlFor="name1" style="padding-right:5px">Name</label>
-                <input pInputText id="name1" #nameField type="text" />
-            </div>
-            <ngx-codemirror #editor
-                            [options]="{
-    mode: 'wintapOverlay',
-    lineNumbers: true,
-    theme: 'material'
-  }"></ngx-codemirror>
-            <div class="card" id="btnDiv">
-                <div class="flex flex-wrap gap-2">
-                    <button pButton pRipple type="button" label="Activate" class="p-button-outlined p-button-success small-button" style="font-size: 1rem" icon="pi pi-power-off" (click)="activateEpl(nameField.value)"></button>
-                </div>
-            </div>
-        </div>
-    </div>
-    <div class="col-6 xl:col-6">
+<div>
+    <div class="col-12 xl:col-12">
         <div class="card">
             <span class="block text-500 font-medium mb-3">Saved Queries</span>
             <p-table #dt1 [value]="eplListing" dataKey="Name" [rows]="3" [loading]="loading" styleClass="p-datatable-gridlines" [paginator]="true" [globalFilterFields]="['Name']" responsiveLayout="scroll" selectionMode="single" [(selection)]="selectedStatement">
@@ -85,6 +65,29 @@
             </div>
         </div>       
     </div>
+<div class="grid">
+    <div class="col-12 xl:col-12">
+        <div class="card">
+            <span class="block text-500 font-medium mb-3">Esper Query Editor</span>
+            <div class="field">
+                <label htmlFor="name1" style="padding-right:5px">Name</label>
+                <input pInputText id="name1" #nameField type="text" />
+            </div>
+            <ngx-codemirror #editor
+                            [options]="{
+    mode: 'wintapOverlay',
+    lineNumbers: true,
+    theme: 'material'
+  }"></ngx-codemirror>
+            <div class="card" id="btnDiv">
+                <div class="flex flex-wrap gap-2">
+                    <button pButton pRipple type="button" label="Activate" class="p-button-outlined p-button-success small-button" style="font-size: 1rem" icon="pi pi-power-off" (click)="activateEpl(nameField.value)"></button>
+                </div>
+            </div>
+        </div>
+    </div>
+    </div>
+    
     <div class="col-12 xl:col-12">
         <div class="card">
             <span class="block text-500 font-medium mb-3">Query Results</span>
