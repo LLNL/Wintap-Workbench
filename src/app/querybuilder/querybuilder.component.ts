@@ -11,6 +11,7 @@ import * as CodeMirror from 'codemirror';
 import 'codemirror/addon/mode/overlay';
 import './wintapmessage';
 import 'signalr';
+import 'codemirror/addon/hint/show-hint';
 
 declare var $: any;
 
@@ -25,16 +26,31 @@ interface expandedRows {
 })
 export class QuerybuilderComponent implements AfterViewInit, OnInit {
 
-    ngAfterViewInit(): void {
-        configureCodeMirror();
-        this.fetchEplListing();
-    }
-
     @ViewChild('editor') codeEditor!: CodemirrorComponent;
     @ViewChild('nameField') nameField!: ElementRef;
     @ViewChild('dt1') table!: Table;
     @ViewChild('resultsContainer') resultsContainer!: ElementRef;
 
+    ngAfterViewInit(): void {
+        configureCodeMirror();
+        setTimeout(() => {
+            if (this.codeEditor && this.codeEditor.codeMirror) {
+              const editor = this.codeEditor.codeMirror;
+              console.log('CodeMirror is initialized:', this.codeEditor.codeMirror);
+              editor.setOption('extraKeys', {
+                "Ctrl-Space": "autocomplete"
+              });
+        
+              editor.setOption('hintOptions', {
+                hint: this.customHintFunction
+              });
+            } else {
+              console.error('CodeMirror instance is not available.');
+            }
+        }, 500);  
+
+        this.fetchEplListing();
+    }
 
     eplListing: Statement[] = [];
     selectedStatement: any = null;
@@ -69,6 +85,77 @@ export class QuerybuilderComponent implements AfterViewInit, OnInit {
     ngOnInit() {
         this.loading = false;
     }
+
+    private customHintFunction(editor: any): any {
+
+        interface IObjectProperties {
+            [key: string]: string[];
+          }
+          
+          interface ISuggestion {
+            text: string;
+            displayText: string;
+          }
+          
+          const objectProperties: IObjectProperties = {
+            'WintapMessage': ['PID', 'EventTime', 'ProcessName', 'MessageType', 'ReceiveTime', 'PidHash', 'ActivityType', 'CorrelationId', 'ActivityId'],
+            'ActivityType': ['start', 'stop', 'refresh'],
+            'Process': ['ParentPID', 'ParentPidHash', 'ParentProcessName', 'Name', 'Path', 'CommandLine', 'Arguments', 'User', 'ExitCode', 'CPUCycleCount', 'CPUUtilization', 'CommitCharge', 'CommitPeak', 'ReadOperationCount', 'WriteOperationCount', 'ReadTransferKiloBytes', 'WriteTransferKiloBytes', 'HardFaultCount', 'TokenElevationType', 'PID', 'UniqueProcessKey', 'MD5', 'SHA2'],
+            'TcpConnection': ['Direction', 'SourceAddress', 'SourcePort', 'DestinationAddress', 'DestinationPort', 'State', 'MaxSegSize', 'RcvWin', 'RcvWinScale', 'SackOpt', 'SeqNo', 'PacketSize', 'SendWinScale', 'TimestampOption', 'WinScaleOption', 'EndTime', 'StartTime', 'FailureCode', 'PID'],
+            'UdpPacket': ['SourceAddress', 'SourcePort', 'DestinationAddress', 'DestinationPort', 'PacketSize', 'PID'],
+            'ImageLoad': ['FileName', 'BuildTime', 'ImageChecksum', 'ImageSize', 'DefaultBase', 'ImageBase', 'MD5'],
+            'File': ['Path', 'BytesRequested'],
+            'Registry': ['Path', 'DataType', 'ValueName', 'Data',],
+            'FocusChange': ['OldProcessId', 'FocusChangeSessionId'],
+            'WaitCursor': ['SessionId', 'DisplayTimeMS'],
+            'GenericMessage': ['Provider', 'EventName', 'Payload'],
+            'WmiActivity': ['OperationId', 'Operation', 'User', 'IsLocal', 'ResultCode'],
+            'EventlogEvent': ['LogName', 'LogSource', 'EventId', 'EventMessage'],
+            'KernelApiCall': ['ProviderName', 'TargetPid', 'DesiredAccess', 'ReturnCode', 'LinkSourceName', 'LinkTargetName', 'NotifyRoutineAddress', 'TargetThreatId'],
+            'MemoryMap': ['Description', 'BaseAddress', 'AllocationBaseAddress', 'AllocationProtect', 'RegionSize', 'PageProtect', 'PageSize'],
+          };
+
+          let suggestions: ISuggestion[] = [];
+
+          const cursor = editor.getCursor();
+          const lineContent = editor.getLine(cursor.line);
+          const textBeforeCursor = lineContent.substring(0, cursor.ch);
+        
+          // Regular expression to match "MessageType =" or "MessageType="
+          const messageTypeRegex = /messagetype\s*=\s*$/i;
+        
+          if (messageTypeRegex.test(textBeforeCursor)) {
+            console.log("MessageType context recognized");
+            suggestions = Object.keys(objectProperties).map(key => {
+              let displayText = key;
+              let text = key;
+              if (key.toLowerCase() === 'process' || key.toLowerCase() === 'tcpconnection' || key.toLowerCase() === 'udppacket' || key.toLowerCase() == 'imageload'|| key.toLowerCase() == 'file'|| key.toLowerCase() == 'registry' || key.toLowerCase() == 'focuschange' || key.toLowerCase() == 'waitcursor' || key.toLowerCase() == 'genericmessage' || key.toLowerCase() == 'wmiactivity'|| key.toLowerCase() == 'eventlogevent'|| key.toLowerCase() == 'kernelapicall'|| key.toLowerCase() == 'memorymap' ) {
+                text = `"${key}"`;
+              }
+              return { text, displayText };
+            });
+          } else {
+            const match = textBeforeCursor.match(/(\w+)\.$/i);
+            if (match) {
+              const key = match[1].toLowerCase(); 
+              const lowerCaseProperties: IObjectProperties = {};
+              // Convert all keys in objectProperties to lowercase
+              Object.keys(objectProperties).forEach(currentKey => {
+                lowerCaseProperties[currentKey.toLowerCase()] = objectProperties[currentKey];
+              });
+        
+              if (key in lowerCaseProperties) {
+                suggestions = lowerCaseProperties[key].map(prop => ({ text: prop, displayText: prop }));
+              }
+            }
+          }
+        
+          return {
+            list: suggestions,
+            from: CodeMirror.Pos(cursor.line, cursor.ch),
+            to: CodeMirror.Pos(cursor.line, cursor.ch)
+          };
+        }      
 
     onSort() {
         // TODO

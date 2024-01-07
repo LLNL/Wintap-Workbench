@@ -32,6 +32,7 @@
                         ],
                         "styles": [
                             "src/styles.scss",
+                            "node_modules/codemirror/addon/hint/show-hint.css",
                             {
                                 "input": "node_modules/codemirror/lib/codemirror.css",
                                 "inject": true
@@ -39,7 +40,8 @@
                         ],
                         "scripts": [
                             "node_modules/jquery/dist/jquery.min.js",
-                            "node_modules/signalr/jquery.signalR.min.js"
+                            "node_modules/signalr/jquery.signalR.min.js",
+                            "node_modules/codemirror/addon/hint/show-hint.js"
                           ]
                     },
                     "configurations": {

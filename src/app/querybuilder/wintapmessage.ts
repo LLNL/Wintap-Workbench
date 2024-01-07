@@ -113,14 +113,14 @@ const wintapmessage: CodeMirror.Mode<any> = {
         return "string";
       }
       // File
-      if (stream.match(/^FileActivity\b/, true) && validPrevChar) {
+      if (stream.match(/^File\b/, true) && validPrevChar) {
         return "atom";
       }  
       if (stream.match(/^BytesRequested\b/, true)) {
         return "number";
       }
       // Registry
-      if (stream.match(/^RegActivity\b/, true) && validPrevChar) {
+      if (stream.match(/^Registry\b/, true) && validPrevChar) {
         return "atom";
       }  
       if (stream.match(/^DataType\b/, true)) {
@@ -132,7 +132,26 @@ const wintapmessage: CodeMirror.Mode<any> = {
       if (stream.match(/^Data\b/, true)) {
         return "string";
       }
-
+      // FocusChange
+      if (stream.match(/^FocusChange\b/, true) && validPrevChar) {
+        return "atom";
+      }  
+      if (stream.match(/^OldProcessId\b/, true)) {
+        return "number";
+      }
+      if (stream.match(/^FocusChangeSessionId\b/, true)) {
+        return "number";
+      }
+      // WaitCursor
+      if (stream.match(/^WaitCursor\b/, true) && validPrevChar) {
+        return "atom";
+      }  
+      if (stream.match(/^SessionId\b/, true)) {
+        return "number";
+      }
+      if (stream.match(/^DisplayTimeMS\b/, true)) {
+        return "number";
+      }
 
       stream.next();
       return null;
