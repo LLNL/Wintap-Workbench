@@ -91,6 +91,10 @@ export class QuerybuilderComponent implements AfterViewInit, OnInit {
         interface IObjectProperties {
             [key: string]: string[];
           }
+
+        interface IActivityProperties {
+            [key: string]: string;
+        }
           
           interface ISuggestion {
             text: string;
@@ -99,7 +103,6 @@ export class QuerybuilderComponent implements AfterViewInit, OnInit {
           
           const objectProperties: IObjectProperties = {
             'WintapMessage': ['PID', 'EventTime', 'ProcessName', 'MessageType', 'ReceiveTime', 'PidHash', 'ActivityType', 'CorrelationId', 'ActivityId'],
-            'ActivityType': ['start', 'stop', 'refresh'],
             'Process': ['ParentPID', 'ParentPidHash', 'ParentProcessName', 'Name', 'Path', 'CommandLine', 'Arguments', 'User', 'ExitCode', 'CPUCycleCount', 'CPUUtilization', 'CommitCharge', 'CommitPeak', 'ReadOperationCount', 'WriteOperationCount', 'ReadTransferKiloBytes', 'WriteTransferKiloBytes', 'HardFaultCount', 'TokenElevationType', 'PID', 'UniqueProcessKey', 'MD5', 'SHA2'],
             'TcpConnection': ['Direction', 'SourceAddress', 'SourcePort', 'DestinationAddress', 'DestinationPort', 'State', 'MaxSegSize', 'RcvWin', 'RcvWinScale', 'SackOpt', 'SeqNo', 'PacketSize', 'SendWinScale', 'TimestampOption', 'WinScaleOption', 'EndTime', 'StartTime', 'FailureCode', 'PID'],
             'UdpPacket': ['SourceAddress', 'SourcePort', 'DestinationAddress', 'DestinationPort', 'PacketSize', 'PID'],
@@ -115,6 +118,15 @@ export class QuerybuilderComponent implements AfterViewInit, OnInit {
             'MemoryMap': ['Description', 'BaseAddress', 'AllocationBaseAddress', 'AllocationProtect', 'RegionSize', 'PageProtect', 'PageSize'],
           };
 
+          const activityProperties: IActivityProperties = {
+            'start': 'start',
+            'stop': 'stop',
+            'refresh': 'refresh',
+            'WRITE': 'WRITE',
+            'READ': 'READ',
+            'CLOSE': 'CLOSE'
+          }
+
           let suggestions: ISuggestion[] = [];
 
           const cursor = editor.getCursor();
@@ -123,6 +135,7 @@ export class QuerybuilderComponent implements AfterViewInit, OnInit {
         
           // Regular expression to match "MessageType =" or "MessageType="
           const messageTypeRegex = /messagetype\s*=\s*$/i;
+          const activityTypeRegex = /activitytype\s*=\s*$/i;
         
           if (messageTypeRegex.test(textBeforeCursor)) {
             console.log("MessageType context recognized");
@@ -132,6 +145,13 @@ export class QuerybuilderComponent implements AfterViewInit, OnInit {
               if (key.toLowerCase() === 'process' || key.toLowerCase() === 'tcpconnection' || key.toLowerCase() === 'udppacket' || key.toLowerCase() == 'imageload'|| key.toLowerCase() == 'file'|| key.toLowerCase() == 'registry' || key.toLowerCase() == 'focuschange' || key.toLowerCase() == 'waitcursor' || key.toLowerCase() == 'genericmessage' || key.toLowerCase() == 'wmiactivity'|| key.toLowerCase() == 'eventlogevent'|| key.toLowerCase() == 'kernelapicall'|| key.toLowerCase() == 'memorymap' ) {
                 text = `"${key}"`;
               }
+              return { text, displayText };
+            });
+          } else if (activityTypeRegex.test(textBeforeCursor)) {
+            console.log("ActivityType context recognized");
+            suggestions = Object.keys(activityProperties).map(key => {
+              let displayText = key;
+              let text = `"${key}"`;
               return { text, displayText };
             });
           } else {
