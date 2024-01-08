@@ -102,20 +102,20 @@ export class QuerybuilderComponent implements AfterViewInit, OnInit {
           }
           
           const objectProperties: IObjectProperties = {
-            'WintapMessage': ['PID', 'EventTime', 'ProcessName', 'MessageType', 'ReceiveTime', 'PidHash', 'ActivityType', 'CorrelationId', 'ActivityId'],
-            'Process': ['ParentPID', 'ParentPidHash', 'ParentProcessName', 'Name', 'Path', 'CommandLine', 'Arguments', 'User', 'ExitCode', 'CPUCycleCount', 'CPUUtilization', 'CommitCharge', 'CommitPeak', 'ReadOperationCount', 'WriteOperationCount', 'ReadTransferKiloBytes', 'WriteTransferKiloBytes', 'HardFaultCount', 'TokenElevationType', 'PID', 'UniqueProcessKey', 'MD5', 'SHA2'],
-            'TcpConnection': ['Direction', 'SourceAddress', 'SourcePort', 'DestinationAddress', 'DestinationPort', 'State', 'MaxSegSize', 'RcvWin', 'RcvWinScale', 'SackOpt', 'SeqNo', 'PacketSize', 'SendWinScale', 'TimestampOption', 'WinScaleOption', 'EndTime', 'StartTime', 'FailureCode', 'PID'],
-            'UdpPacket': ['SourceAddress', 'SourcePort', 'DestinationAddress', 'DestinationPort', 'PacketSize', 'PID'],
-            'ImageLoad': ['FileName', 'BuildTime', 'ImageChecksum', 'ImageSize', 'DefaultBase', 'ImageBase', 'MD5'],
-            'File': ['Path', 'BytesRequested'],
-            'Registry': ['Path', 'DataType', 'ValueName', 'Data',],
-            'FocusChange': ['OldProcessId', 'FocusChangeSessionId'],
-            'WaitCursor': ['SessionId', 'DisplayTimeMS'],
-            'GenericMessage': ['Provider', 'EventName', 'Payload'],
-            'WmiActivity': ['OperationId', 'Operation', 'User', 'IsLocal', 'ResultCode'],
-            'EventlogEvent': ['LogName', 'LogSource', 'EventId', 'EventMessage'],
-            'KernelApiCall': ['ProviderName', 'TargetPid', 'DesiredAccess', 'ReturnCode', 'LinkSourceName', 'LinkTargetName', 'NotifyRoutineAddress', 'TargetThreatId'],
-            'MemoryMap': ['Description', 'BaseAddress', 'AllocationBaseAddress', 'AllocationProtect', 'RegionSize', 'PageProtect', 'PageSize'],
+            'WintapMessage': ['PID (number)', 'EventTime (long)', 'ProcessName (string)', 'MessageType (string)', 'ReceiveTime (long)', 'PidHash (string)', 'ActivityType (string)', 'CorrelationId (string)', 'ActivityId (string)'],
+            'Process': ['ParentPID (number)', 'ParentPidHash (string)', 'ParentProcessName (string)', 'Name (string)', 'Path (lower string)', 'CommandLine (lower string)', 'Arguments (lower string)', 'User (string)', 'ExitCode (number)', 'CPUCycleCount (number)', 'CPUUtilization (number)', 'CommitCharge (number)', 'CommitPeak (number)', 'ReadOperationCount (number)', 'WriteOperationCount (number)', 'ReadTransferKiloBytes (number)', 'WriteTransferKiloBytes (number)', 'HardFaultCount (number)', 'TokenElevationType (number)', 'PID (number)', 'UniqueProcessKey (string)', 'MD5 (string)', 'SHA2 (string)'],
+            'TcpConnection': ['Direction (string)', 'SourceAddress (string)', 'SourcePort (number)', 'DestinationAddress (string)', 'DestinationPort (number)', 'State (string)', 'MaxSegSize (number)', 'RcvWin', 'RcvWinScale', 'SackOpt', 'SeqNo', 'PacketSize', 'SendWinScale', 'TimestampOption', 'WinScaleOption', 'EndTime', 'StartTime', 'FailureCode', 'PID'],
+            'UdpPacket': ['SourceAddress (string)', 'SourcePort (number)', 'DestinationAddress (string)', 'DestinationPort (number)', 'PacketSize (number)'],
+            'ImageLoad': ['FileName (string)', 'BuildTime (number)', 'ImageChecksum (number)', 'ImageSize (number)', 'DefaultBase (string)', 'ImageBase (string)', 'MD5 (string)'],
+            'File': ['Path (string)', 'BytesRequested (number)'],
+            'Registry': ['Path (string)', 'DataType (string)', 'ValueName (string)', 'Data (string)',],
+            'FocusChange': ['OldProcessId (number)', 'FocusChangeSessionId (number)'],
+            'WaitCursor': ['SessionId (number)', 'DisplayTimeMS (number)'],
+            'GenericMessage': ['Provider (string)', 'EventName (string)', 'Payload (string)'],
+            'WmiActivity': ['OperationId (number)', 'Operation (string)', 'User (string)', 'IsLocal (number)', 'ResultCode (number)'],
+            'EventlogEvent': ['LogName (string)', 'LogSource (string)', 'EventId (number)', 'EventMessage (string)'],
+            'KernelApiCall': ['ProviderName (string)', 'TargetPid (number)', 'DesiredAccess (number)', 'ReturnCode (number)', 'LinkSourceName (string)', 'LinkTargetName (string)', 'NotifyRoutineAddress (number)', 'TargetThreatId (number)'],
+            'MemoryMap': ['Description (string)', 'BaseAddress (string)', 'AllocationBaseAddress (string)', 'AllocationProtect (string)', 'RegionSize (number)', 'PageProtect (string)', 'PageType (string)'],
           };
 
           const activityProperties: IActivityProperties = {
@@ -165,7 +165,7 @@ export class QuerybuilderComponent implements AfterViewInit, OnInit {
               });
         
               if (key in lowerCaseProperties) {
-                suggestions = lowerCaseProperties[key].map(prop => ({ text: prop, displayText: prop }));
+                suggestions = lowerCaseProperties[key].map(prop => ({ text: extractStringBeforeParen(prop), displayText: prop }));
               }
             }
           }
@@ -321,6 +321,18 @@ function configureCodeMirror() {
     });
   }
   
+  function extractStringBeforeParen(input: string): string {
+    // Find the index of the open parenthesis
+    const indexOfOpenParen = input.indexOf('(');
+
+    // If there's no open parenthesis, return the original string
+    if (indexOfOpenParen === -1) {
+        return input;
+    }
+
+    // Extract and return the substring before the open parenthesis
+    return input.substring(0, indexOfOpenParen).trim();
+}
 
 export interface ApiResponse {
     response: Statement[];

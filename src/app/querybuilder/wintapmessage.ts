@@ -25,11 +25,14 @@ const wintapmessage: CodeMirror.Mode<any> = {
         return "number";
       }
       // Process
-      if (stream.match(/^Process\b/, true) && validPrevChar) {
+      if (stream.match(/^Process/, true)) {
         return "atom";
       }  
       if (stream.match(/^ParentPID\b/, true)) {
         return "number";
+      }
+      if (stream.match(/^ParentPidHash\b/, true)) {
+        return "string";
       }
       if (stream.match(/^Name\b/, true)) {
         return "string";
@@ -113,14 +116,14 @@ const wintapmessage: CodeMirror.Mode<any> = {
         return "string";
       }
       // File
-      if (stream.match(/^File\b/, true) && validPrevChar) {
+      if (stream.match(/^File\b/, true)) {
         return "atom";
       }  
       if (stream.match(/^BytesRequested\b/, true)) {
         return "number";
       }
       // Registry
-      if (stream.match(/^Registry\b/, true) && validPrevChar) {
+      if (stream.match(/^Registry\b/, true)) {
         return "atom";
       }  
       if (stream.match(/^DataType\b/, true)) {
@@ -133,7 +136,7 @@ const wintapmessage: CodeMirror.Mode<any> = {
         return "string";
       }
       // FocusChange
-      if (stream.match(/^FocusChange\b/, true) && validPrevChar) {
+      if (stream.match(/^FocusChange\b/, true)) {
         return "atom";
       }  
       if (stream.match(/^OldProcessId\b/, true)) {
@@ -143,7 +146,7 @@ const wintapmessage: CodeMirror.Mode<any> = {
         return "number";
       }
       // WaitCursor
-      if (stream.match(/^WaitCursor\b/, true) && validPrevChar) {
+      if (stream.match(/^WaitCursor\b/, true)) {
         return "atom";
       }  
       if (stream.match(/^SessionId\b/, true)) {
@@ -152,7 +155,107 @@ const wintapmessage: CodeMirror.Mode<any> = {
       if (stream.match(/^DisplayTimeMS\b/, true)) {
         return "number";
       }
-
+      // GenericMessage
+      if (stream.match(/^GenericMessage\b/, true)) {
+        return "atom";
+      }  
+      if (stream.match(/^Provider\b/, true)) {
+        return "string";
+      }
+      if (stream.match(/^EventName\b/, true)) {
+        return "string";
+      }
+      if (stream.match(/^Payload\b/, true)) {
+        return "string";
+      }
+      // WmiActivity
+      if (stream.match(/^WmiActivity\b/, true)) {
+        return "atom";
+      }  
+      if (stream.match(/^OperationId\b/, true)) {
+        return "string";
+      }
+      if (stream.match(/^Operation\b/, true)) {
+        return "string";
+      }
+      if (stream.match(/^User\b/, true)) {
+        return "string";
+      }
+      if (stream.match(/^IsLocal\b/, true)) {
+        return "string";
+      }
+      if (stream.match(/^ResultCode\b/, true)) {
+        return "number";
+      }
+      // EventlogEvent
+      if (stream.match(/^EventlogEvent\b/, true)) {
+        return "atom";
+      }  
+      if (stream.match(/^LogName\b/, true)) {
+        return "string";
+      }
+      if (stream.match(/^LogSource\b/, true)) {
+        return "string";
+      }
+      if (stream.match(/^EventId\b/, true)) {
+        return "number";
+      }
+      if (stream.match(/^EventMessage\b/, true)) {
+        return "string";
+      }
+      // KernelApiCall
+      if (stream.match(/^KernelApiCall\b/, true)) {
+        return "atom";
+      }  
+      if (stream.match(/^ProviderName\b/, true)) {
+        return "string";
+      }
+      if (stream.match(/^TargetPid\b/, true)) {
+        return "number";
+      }
+      if (stream.match(/^DesiredAccess\b/, true)) {
+        return "number";
+      }
+      if (stream.match(/^ReturnCode\b/, true)) {
+        return "number";
+      }
+      if (stream.match(/^LinkSourceName\b/, true)) {
+        return "string";
+      }
+      if (stream.match(/^LinkTargetName\b/, true)) {
+        return "string";
+      }
+      if (stream.match(/^NotifyRoutineAddress\b/, true)) {
+        return "number";
+      }
+      if (stream.match(/^TargetThreatId\b/, true)) {
+        return "number";
+      }
+      // MemoryMap
+      if (stream.match(/^MemoryMap\b/, true)) {
+        return "atom";
+      }  
+      if (stream.match(/^Description\b/, true)) {
+        return "string";
+      }
+      if (stream.match(/^BaseAddress\b/, true)) {
+        return "string";
+      }
+      if (stream.match(/^AllocationBaseAddress\b/, true)) {
+        return "string";
+      }
+      if (stream.match(/^AllocationProtect\b/, true)) {
+        return "string";
+      }
+      if (stream.match(/^RegionSize\b/, true)) {
+        return "number";
+      }
+      if (stream.match(/^PageProtect\b/, true)) {
+        return "string";
+      }
+      if (stream.match(/^PageSize\b/, true)) {
+        return "number";
+      }
       stream.next();
       return null;
     },
