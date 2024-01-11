@@ -27,6 +27,7 @@ export class AppMenuComponent implements OnInit {
                 items: [
                     { label: 'Esper Workbench', icon: 'pi pi-fw pi-bolt', routerLink: ['/querybuilder'] },
                     { label: 'Process Tree Viewer', icon: 'pi pi-fw pi-sitemap', routerLink: ['/treeview'] },
+                    { label: 'ETW Explorer', icon: 'pi pi-fw pi-map-marker', routerLink: ['/etwexplorer'] },
                 ]
             },
             {

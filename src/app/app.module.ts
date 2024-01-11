@@ -22,11 +22,12 @@ import { CommonModule } from '@angular/common';
 import { TreeviewComponent } from './treeview/treeview.component';
 import { TreeTableModule } from 'primeng/treetable';
 import { BadgeModule } from 'primeng/badge';
+import { EtwExplorerComponent } from './etw-explorer/etw-explorer.component';
 
 
 @NgModule({
     declarations: [
-        AppComponent, NotfoundComponent, QuerybuilderComponent, TreeviewComponent
+        AppComponent, NotfoundComponent, QuerybuilderComponent, TreeviewComponent, EtwExplorerComponent
     ],
     imports: [
         AppRoutingModule,
