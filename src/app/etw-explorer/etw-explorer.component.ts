@@ -36,23 +36,19 @@ export class EtwExplorerComponent implements AfterViewInit, OnInit {
   loading: boolean = true;
   private connection: any;
   queryResults: string[] = [];
+  filteredRowCount: number = 0;
+  filteredRowCountHidden: boolean = true;
 
   constructor(private http: HttpClient, private cd: ChangeDetectorRef) {
     this.connection = $.hubConnection('/signalr');
     const hubProxy = this.connection.createHubProxy('explorerHub');
-  
-    // Add event handlers for the hub
+
     hubProxy.on('addMessage', (data: string) => {
       let parsedData = JSON.parse(data);
-      this.etwSample = parsedData;
-      this.etwSamples.push(this.etwSample);
-      console.log(JSON.stringify(this.etwSample)); // This will now be an object
-      this.cd.detectChanges();
-      setTimeout(() => {
-        this.table.value = this.etwSamples;
-        this.cd.detectChanges();
-    }, 0);
+      this.etwSamples.push(parsedData);
+      cd.detectChanges();
     });
+    
   
     // Start the connection
     this.connection.start()
@@ -78,7 +74,6 @@ fetchProviderListing() {
 startProvider() {
   const selectedRow = this.table.selection;
         const providerName = this.selectedProvider.ProviderName;
-        // const encodedContent = encodeURIComponent(queryString);
         this.enableProvider(providerName).subscribe(
           (response) => {
               console.log('Success:', response);
@@ -112,6 +107,11 @@ disableProvider(): Observable<any> {
 
 onGlobalFilter(table: Table, event: Event) {
   table.filterGlobal((event.target as HTMLInputElement).value, 'contains');
+}
+
+onGlobalFilter2(table: Table, event: Event) {
+  table.filterGlobal((event.target as HTMLInputElement).value, 'contains');
+  this.filteredRowCountHidden = false;
 }
 
 clear(table: Table) {

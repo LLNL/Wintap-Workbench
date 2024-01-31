@@ -57,16 +57,17 @@
                         <button pButton label="Clear" class="p-button-outlined mb-2" icon="pi pi-filter-slash" (click)="clear(dt2)"></button>
                         <span class="p-input-icon-left mb-2">
                             <i class="pi pi-search"></i>
-                            <input pInputText type="text" #filter (input)="onGlobalFilter(dt2, $event)" placeholder="Search Keyword" class="w-full" />
+                            <input pInputText type="text" #filter2 (input)="onGlobalFilter2(dt2, $event)" placeholder="Search Keyword" class="w-full" />
                         </span>
                     </div>
+                    <p [hidden]="filteredRowCountHidden" style="font-weight: normal; text-align: right;">Filtered Rows: {{ dt2.totalRecords }}</p>
                 </ng-template>
                 <ng-template pTemplate="header">
                     <tr>
                         <th style="min-width: 12rem">
                             <div class="flex justify-content-between align-items-center">
                                 Provider Name
-                                <p-columnFilter type="text" field="ProviderName" display="menu" placeholder="Search by name"></p-columnFilter>
+                                <p-columnFilter #searchBox type="text" field="ProviderName" display="menu" placeholder="Search by name"></p-columnFilter>
                             </div>
                         </th>
                         <th style="min-width: 10rem">
