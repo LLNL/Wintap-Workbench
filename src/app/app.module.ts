@@ -22,6 +22,9 @@ import { CommonModule } from '@angular/common';
 import { TreeviewComponent } from './treeview/treeview.component';
 import { TreeTableModule } from 'primeng/treetable';
 import { BadgeModule } from 'primeng/badge';
+import { CardModule } from 'primeng/card';
+import { DividerModule } from 'primeng/divider';
+import { DropdownModule } from 'primeng/dropdown';
 import { EtwExplorerComponent } from './etw-explorer/etw-explorer.component';
 
 
@@ -46,7 +49,10 @@ import { EtwExplorerComponent } from './etw-explorer/etw-explorer.component';
         DialogModule,
         TreeTableModule,
         CommonModule,
-        BadgeModule
+        BadgeModule,
+        CardModule,
+        DividerModule,
+        DropdownModule
     ],
     providers: [
         DatePipe,

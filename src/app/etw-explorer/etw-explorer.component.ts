@@ -7,13 +7,11 @@ import { Observable } from 'rxjs';
 import { ChangeDetectorRef } from '@angular/core';
 import 'signalr';
 
-
 declare var $: any;
 
 interface expandedRows {
     [key: string]: boolean;
 }
-
 
 @Component({
   selector: 'app-etw-explorer',
@@ -21,23 +19,24 @@ interface expandedRows {
   styleUrls: ['./etw-explorer.component.scss']
 })
 export class EtwExplorerComponent implements AfterViewInit, OnInit {
-  @ViewChild('dt2') table!: Table;
+  @ViewChild('dt2') eventDataTable!: Table;
   @ViewChild('resultsContainer') resultsContainer!: ElementRef;
 
   ngAfterViewInit(): void {
     this.fetchProviderListing();
 }
 
+  private connection: any;
   providerListing: EtwProvider[] = [];
   etwSamples: ETWSample[] = [];
   selectedSample: any = null;
   etwSample!: ETWSample;
   selectedProvider: any = null;
   loading: boolean = true;
-  private connection: any;
   queryResults: string[] = [];
   filteredRowCount: number = 0;
-  filteredRowCountHidden: boolean = true;
+  eventNameOptions!: any[];
+  uniqueEventNames: Set<string> = new Set();
 
   constructor(private http: HttpClient, private cd: ChangeDetectorRef) {
     this.connection = $.hubConnection('/signalr');
@@ -46,8 +45,13 @@ export class EtwExplorerComponent implements AfterViewInit, OnInit {
     hubProxy.on('addMessage', (data: string) => {
       let parsedData = JSON.parse(data);
       this.etwSamples.push(parsedData);
-      cd.detectChanges();
-    });
+      // Extract the event name and add to the set
+      this.uniqueEventNames.add(parsedData.EventName);
+      // Update eventNameOptions
+      this.updateEventNameOptions();
+      this.eventDataTable.totalRecords++;
+        cd.detectChanges();
+      });
     
   
     // Start the connection
@@ -62,6 +66,11 @@ export class EtwExplorerComponent implements AfterViewInit, OnInit {
 
 ngOnInit() {
     this.loading = false;
+    this.eventNameOptions = [
+      { label: 'Event 1', value: 'Event 1' },
+      { label: 'Event 2', value: 'Event 2' },
+      // ... other event names
+  ];
 }
 
 fetchProviderListing() {
@@ -72,11 +81,13 @@ fetchProviderListing() {
 }
 
 startProvider() {
-  const selectedRow = this.table.selection;
+  const selectedRow = this.eventDataTable.selection;
         const providerName = this.selectedProvider.ProviderName;
         this.enableProvider(providerName).subscribe(
           (response) => {
               console.log('Success:', response);
+              // Clear the eventNameOptions array
+                this.eventNameOptions = [];
           },
           (error) => {
               console.log('Error:' + JSON.stringify(error));
@@ -111,11 +122,19 @@ onGlobalFilter(table: Table, event: Event) {
 
 onGlobalFilter2(table: Table, event: Event) {
   table.filterGlobal((event.target as HTMLInputElement).value, 'contains');
-  this.filteredRowCountHidden = false;
 }
 
 clear(table: Table) {
   this.etwSamples = [];
+  this.eventNameOptions = [];
+  this.eventDataTable.totalRecords = 0;
+}
+
+// Function to update eventNameOptions
+updateEventNameOptions() {
+  this.eventNameOptions = Array.from(this.uniqueEventNames).map(eventName => {
+      return { label: eventName, value: eventName };
+  });
 }
 
 }

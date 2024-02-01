@@ -40,9 +40,9 @@
             </p-table>
             <div class="card" id="btnDiv">
                 <div class="flex flex-wrap gap-2">
-                    <button pButton pRipple type="button" label="Start" class="p-button-success" icon="pi pi-play" (click)="startProvider()"></button>
-                    <button pButton pRipple type="button" label="Stop" class="p-button-warning" icon="pi pi-stop" (click)="stopProvider()"></button>
-                </div>
+                    <button pButton pRipple type="button" label="Start" class="p-button-success" icon="pi pi-play" (click)="startProvider()" ></button>
+                    <button pButton pRipple type="button" label="Stop" class="p-button-warning" icon="pi pi-stop" (click)="stopProvider()" ></button>
+                  </div>                  
             </div>
         </div>       
     </div>
@@ -60,7 +60,7 @@
                             <input pInputText type="text" #filter2 (input)="onGlobalFilter2(dt2, $event)" placeholder="Search Keyword" class="w-full" />
                         </span>
                     </div>
-                    <p [hidden]="filteredRowCountHidden" style="font-weight: normal; text-align: right;">Filtered Rows: {{ dt2.totalRecords }}</p>
+                    <p style="font-weight: normal; text-align: right;">Filtered Rows: {{ dt2.totalRecords }}</p>
                 </ng-template>
                 <ng-template pTemplate="header">
                     <tr>
@@ -73,9 +73,18 @@
                         <th style="min-width: 10rem">
                             <div class="flex justify-content-between align-items-center">
                                 Event Name
-                                <p-columnFilter type="text" field="EventName" display="menu" placeholder=""></p-columnFilter>
+                                <p-columnFilter field="EventName" display="menu">
+                                    <ng-template pTemplate="filter" let-value let-filter="filterCallback">
+                                        <p-dropdown [options]="eventNameOptions" 
+                                                    (onChange)="filter($event.value)" 
+                                                    [style]="{'width':'100%'}" 
+                                                    [showClear]="true">
+                                        </p-dropdown>
+                                    </ng-template>
+                                </p-columnFilter>
                             </div>
                         </th>
+                                              
                         <th style="min-width: 12rem">
                             <div class="flex justify-content-between align-items-center">
                                 Message
