@@ -61,15 +61,19 @@ export class QuerybuilderComponent implements AfterViewInit, OnInit {
     queryResults: string[] = [];
     queryError: string = '';
 
+    esperResults: EsperResult[] = [];
+    esperResult!: EsperResult;
+    selectedResult: any = null;
+
     constructor(private http: HttpClient, private cd: ChangeDetectorRef) {
         this.connection = $.hubConnection('/signalr');
         const hubProxy = this.connection.createHubProxy('workbenchHub');
       
         // Add event handlers for the hub
-        hubProxy.on('addMessage', (data: any) => {
-          this.queryResults.push(decodeURIComponent(data));
+        hubProxy.on('addMessage', (data: EsperResult) => {
+          this.esperResults.push(data);
           this.cd.detectChanges();
-          setTimeout(() => this.scrollToBottom(), 0);
+          console.log('data pushed to esperResults: ' + JSON.stringify(data));
         });
       
         // Start the connection
@@ -185,8 +189,16 @@ export class QuerybuilderComponent implements AfterViewInit, OnInit {
         table.filterGlobal((event.target as HTMLInputElement).value, 'contains');
     }
 
+    onGlobalFilter2(table: Table, event: Event) {
+      table.filterGlobal((event.target as HTMLInputElement).value, 'contains');
+  }
+
     clear(table: Table) {
         this.deleteEpl() ;
+    }
+
+    clearResults(table: Table) {
+      this.esperResults = [];
     }
 
     activateEpl(eplName: string) {
@@ -346,3 +358,6 @@ export interface Statement {
     CreateDate: number;
 }
 
+export interface EsperResult {
+  Result: string;
+}
