@@ -69,7 +69,6 @@ ngOnInit() {
     this.eventNameOptions = [
       { label: 'Event 1', value: 'Event 1' },
       { label: 'Event 2', value: 'Event 2' },
-      // ... other event names
   ];
 }
 

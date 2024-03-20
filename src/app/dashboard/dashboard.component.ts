@@ -5,12 +5,14 @@ import { Subscription } from 'rxjs';
 import { LayoutService } from 'src/app/layout/service/app.layout.service';
 import { UIChart } from "primeng/chart";
 import { trigger, state, style, animate, transition } from '@angular/animations';
+import { ChangeDetectorRef } from '@angular/core';
 
 @Component({
     templateUrl: './dashboard.component.html',
     styleUrls: ['./dashboard.component.css']
 })
 export class DashboardComponent implements OnInit, OnDestroy {
+    loading = true;
     public kpi?: KPI;
     items!: MenuItem[];
     chartData: any;
@@ -18,9 +20,20 @@ export class DashboardComponent implements OnInit, OnDestroy {
     subscription!: Subscription;
     updateInterval: NodeJS.Timer;
     counter: number;
+    applyButtonDisabled: boolean = true; 
+    wintapSettings: { [key: string]: boolean } = {
+        Tcp: false,
+        Udp: false,
+        File: false,
+        ImageLoad: false,
+        Registry: false,
+        MemoryMap: false,
+        ApiCall: false,
+        DeveloperMode: false
+      };
     @ViewChild('chart') lineChart: UIChart | undefined;
 
-    constructor(public layoutService: LayoutService, private http: HttpClient) {
+    constructor(public layoutService: LayoutService, private http: HttpClient, private cdr: ChangeDetectorRef) {
         this.subscription = this.layoutService.configUpdate$.subscribe(() => {
             this.initChart();
         });
@@ -33,6 +46,7 @@ export class DashboardComponent implements OnInit, OnDestroy {
 
     ngOnInit() {
         this.initChart();
+        this.getWintapSettings();
     }
 
     initChart() {
@@ -94,9 +108,28 @@ export class DashboardComponent implements OnInit, OnDestroy {
         return this.lineChart!;
     }
 
+    getWintapSettings() {
+        this.http.get('/api/WintapService').subscribe(
+          (response: any) => {
+            this.wintapSettings = response.response;
+          },
+          (error) => {
+            console.error('Error fetching collector settings:', error);
+          }
+        );
+      }
+
+    setWintapSettings(): void {
+        this.http.post('/api/WintapService', this.wintapSettings).subscribe(response => {
+         });
+    
+        this.applyButtonDisabled = true; 
+      }
+    
+      onToggleChange(): void {
+        this.applyButtonDisabled = false;
+      }
 }
-
-
 
 interface KPI {
     runtime: string,
@@ -107,3 +140,4 @@ interface KPI {
     wintapOK: boolean,
     collectorOK: boolean
 }
+

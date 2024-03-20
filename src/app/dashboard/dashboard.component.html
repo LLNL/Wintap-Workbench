@@ -72,6 +72,46 @@
                     <i #wintapEtlStatus class="pi pi-circle-on text-xl " class="{{kpi?.collectorOK ? 'text-green-500' : 'text-red-700'}}" style="margin:10px"></i>Data Collect Plugin
                 </div>
             </div>
+            <div class="card">
+                <h5>Sensor Settings</h5>
+                <div class="flex flex-column align-items-start p-fluid">
+                    <div class="flex align-items-center py-1">
+                        <p-inputSwitch [(ngModel)]="wintapSettings['Tcp']" name="tcp" (onChange)="onToggleChange()"></p-inputSwitch>
+                        <span pTooltip="TCP network activity of a process" tooltipPosition="right" class="help-text" style="margin-left: 1rem; font-size: 1.2rem;">Tcp</span>
+                    </div>
+                    <div class="flex align-items-center py-1">
+                        <p-inputSwitch [(ngModel)]="wintapSettings['Udp']" name="udp" (onChange)="onToggleChange()"></p-inputSwitch>
+                        <span pTooltip="UDP network activity of a process" tooltipPosition="right" class="help-text" style="margin-left: 1rem; font-size: 1.2rem;">Udp</span>
+                    </div>
+                    <div class="flex align-items-center py-1">
+                        <p-inputSwitch [(ngModel)]="wintapSettings['ImageLoad']" name="imageLoad" (onChange)="onToggleChange()"></p-inputSwitch>
+                        <span pTooltip="Binary image load/unload activity of a process.  This includes EXE and DLL files." tooltipPosition="right" class="help-text" style="margin-left: 1rem; font-size: 1.2rem;">Image Loads</span>
+                    </div>
+                    <div class="flex align-items-center py-1">
+                        <p-inputSwitch [(ngModel)]="wintapSettings['File']" name="file" (onChange)="onToggleChange()"></p-inputSwitch>
+                        <span pTooltip="File write activity of a process.  File read events can be enabled by editing the config directly." tooltipPosition="right" class="help-text" style="margin-left: 1rem; font-size: 1.2rem;">File</span>
+                    </div>
+                    <div class="flex align-items-center py-1">
+                        <p-inputSwitch [(ngModel)]="wintapSettings['Registry']" name="registry" (onChange)="onToggleChange()"></p-inputSwitch>
+                        <span pTooltip="Registry write activity of a process.  Registry read events can be enabled by editing the Wintap config directly" tooltipPosition="right" class="help-text" style="margin-left: 1rem; font-size: 1.2rem;">Registry</span>
+                    </div>
+                    <div class="flex align-items-center py-1">
+                        <p-inputSwitch [(ngModel)]="wintapSettings['MemoryMap']" name="memoryMap" (onChange)="onToggleChange()"></p-inputSwitch>
+                        <span pTooltip="Provides detailed information about various memory regions and their properties for a process.  Change to a process working set is used as the trigger to update the Memory map telemetry." tooltipPosition="right" class="help-text" style="margin-left: 1rem; font-size: 1.2rem;">Memory Map</span>
+                    </div>
+                    <div class="flex align-items-center py-1">
+                        <p-inputSwitch [(ngModel)]="wintapSettings['ApiCall']" name="apiCall" (onChange)="onToggleChange()"></p-inputSwitch>
+                        <span pTooltip="A collection of kernel APIs called by a process, for example OpenProcess." tooltipPosition="right" class="help-text" style="margin-left: 1rem; font-size: 1.2rem;">Api Calls</span>
+                    </div>
+                    <div class="flex align-items-center py-1">
+                        <p-inputSwitch [(ngModel)]="wintapSettings['DeveloperMode']" name="devMode" (onChange)="onToggleChange()"></p-inputSwitch>
+                        <span pTooltip="Developer mode disables Wintap's event collection throttling and peformance management functions." tooltipPosition="right" class="help-text" style="margin-left: 1rem; font-size: 1.2rem;">Developer Mode</span>
+                    </div>
+                    <div class="flex align-items-center py-1">
+                </div>
+                    <button pButton type="button" label="Apply" (click)="setWintapSettings()" [disabled]="applyButtonDisabled"></button>
+                </div>
+            </div>            
         </div>
     </div>
 

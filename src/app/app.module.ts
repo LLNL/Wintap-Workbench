@@ -25,6 +25,7 @@ import { BadgeModule } from 'primeng/badge';
 import { CardModule } from 'primeng/card';
 import { DividerModule } from 'primeng/divider';
 import { DropdownModule } from 'primeng/dropdown';
+import { InputSwitchModule } from 'primeng/inputswitch';
 import { EtwExplorerComponent } from './etw-explorer/etw-explorer.component';
 
 
@@ -52,7 +53,8 @@ import { EtwExplorerComponent } from './etw-explorer/etw-explorer.component';
         BadgeModule,
         CardModule,
         DividerModule,
-        DropdownModule
+        DropdownModule,
+        InputSwitchModule
     ],
     providers: [
         DatePipe,
