@@ -12,8 +12,14 @@ const wintapmessage: CodeMirror.Mode<any> = {
       if (stream.match(/^WintapMessage/, true)) {
         return "atom";
       }
+      if (stream.match(/^ProcessName\b/, true)) {
+        return "string";
+      }
       if (stream.match(/^PID\b/, true)) {
         return "number";
+      }
+      if (stream.match(/^PidHash\b/, true)) {
+        return "string";
       }
       if (stream.match(/^MessageType\b/, true)) {
         return "string";
@@ -25,7 +31,7 @@ const wintapmessage: CodeMirror.Mode<any> = {
         return "number";
       }
       // Process
-      if (stream.match(/^Process/, true)) {
+      if (stream.match(/^ Process/, true)) {
         return "atom";
       }  
       if (stream.match(/^ParentPID\b/, true)) {
