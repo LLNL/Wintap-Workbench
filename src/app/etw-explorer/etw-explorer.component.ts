@@ -43,11 +43,16 @@ export class EtwExplorerComponent implements AfterViewInit, OnInit {
     const hubProxy = this.connection.createHubProxy('explorerHub');
 
     hubProxy.on('addMessage', (data: string) => {
-      let parsedData = JSON.parse(data);
+       // Decode known HTML entities with string replacement
+    const decodedData = data.replace(/&quot;/g, '"')
+        .replace(/&lt;/g, '<')
+        .replace(/&gt;/g, '>')
+        .replace(/&apos;/g, "'")
+
+      // Then parse the JSON
+      let parsedData = JSON.parse(decodedData);
       this.etwSamples.push(parsedData);
-      // Extract the event name and add to the set
       this.uniqueEventNames.add(parsedData.EventName);
-      // Update eventNameOptions
       this.updateEventNameOptions();
       this.eventDataTable.totalRecords++;
         cd.detectChanges();
