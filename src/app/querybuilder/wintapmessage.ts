@@ -31,7 +31,7 @@ const wintapmessage: CodeMirror.Mode<any> = {
         return "number";
       }
       // Process
-      if (stream.match(/^ Process/, true)) {
+      if (stream.match(/^Process./, true)) {
         return "atom";
       }  
       if (stream.match(/^ParentPID\b/, true)) {
@@ -122,14 +122,14 @@ const wintapmessage: CodeMirror.Mode<any> = {
         return "string";
       }
       // File
-      if (stream.match(/^File\b/, true)) {
+      if (stream.match(/^FilActivity\b/, true)) {
         return "atom";
       }  
       if (stream.match(/^BytesRequested\b/, true)) {
         return "number";
       }
       // Registry
-      if (stream.match(/^Registry\b/, true)) {
+      if (stream.match(/^RegActivity\b/, true)) {
         return "atom";
       }  
       if (stream.match(/^DataType\b/, true)) {
