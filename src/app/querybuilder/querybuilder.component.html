@@ -46,11 +46,11 @@
                 </ng-template>
                 <ng-template pTemplate="body" let-statement>
                     <tr [pSelectableRow]="statement">
-                        <td>{{ statement.Name }}</td>
-                        <td>{{ statement.CreateDate | date:'MM/dd/yyyy hh:mm a':'PST' }}</td>
+                        <td>{{ statement.name }}</td>
+                        <td>{{ statement.createDate | date:'MM/dd/yyyy hh:mm a':'PST' }}</td>
                         <td>
                             <span class="p-column-title">Status</span>
-                            <span [class]="'customer-badge status-' + statement.State">{{statement.State}}</span>
+                            <span [class]="'customer-badge status-' + statement.State">{{statement.state}}</span>
                         </td>
                     </tr>
                 </ng-template>

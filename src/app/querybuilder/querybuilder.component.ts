@@ -2,7 +2,7 @@ import {
     Component, ViewChild, AfterViewInit, OnInit, ElementRef, QueryList
 } from '@angular/core';
 import { Table } from 'primeng/table';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { ChangeDetectorRef } from '@angular/core';
 import 'codemirror/mode/sql/sql';
@@ -10,7 +10,8 @@ import { CodemirrorComponent } from '@ctrl/ngx-codemirror';
 import * as CodeMirror from 'codemirror';
 import 'codemirror/addon/mode/overlay';
 import './wintapmessage';
-import 'signalr';
+import * as signalR from '@microsoft/signalr';
+import { HubConnectionBuilder } from '@microsoft/signalr';
 import 'codemirror/addon/hint/show-hint';
 
 declare var $: any;
@@ -57,7 +58,7 @@ export class QuerybuilderComponent implements AfterViewInit, OnInit {
     loading: boolean = true;
     showConfirmDialog = false;
     showInvalidQueryDialog = false;
-    private connection: any;
+    connection: any;
     queryResults: string[] = [];
     queryError: string = '';
 
@@ -65,29 +66,33 @@ export class QuerybuilderComponent implements AfterViewInit, OnInit {
     esperResult!: EsperResult;
     selectedResult: any = null;
 
-    constructor(private http: HttpClient, private cd: ChangeDetectorRef) {
-        this.connection = $.hubConnection('/signalr');
-        const hubProxy = this.connection.createHubProxy('workbenchHub');
-      
-        // Add event handlers for the hub
-        hubProxy.on('addMessage', (data: EsperResult) => {
-          this.esperResults.push(data);
-          this.cd.detectChanges();
-          console.log('data pushed to esperResults: ' + JSON.stringify(data));
-        });
-      
-        // Start the connection
-        this.connection.start()
-          .done(() => {
-            console.log('Connected to the hub');
-          })
-          .fail((error: any) => {
-            console.error('Failed to connect to the hub:', error);
-          });
+    constructor(private http: HttpClient, private httpHeaders: HttpHeaders, private cd: ChangeDetectorRef) {
+        
     }
 
     ngOnInit() {
         this.loading = false;
+
+        this.connection = new HubConnectionBuilder()
+        .withUrl('/signalr/workbenchHub')
+        .withAutomaticReconnect([0, 2000, 10000, 30000])
+        .build();
+
+      console.log('starting hub connect');
+      this.connection.start().catch(console.error('error'));
+
+      console.log("wp1");
+      console.log(this.connection.state); // Check the state here
+
+      const fullyQualifiedUrl = `${window.location.protocol}//${window.location.hostname}`;
+
+      console.log(`URL:  ${fullyQualifiedUrl}`);
+      console.log("wp2");
+    this.connection.on('ReceiveMessage', (message: EsperResult) => {
+      console.log('esper query result: ' + JSON.stringify(message));
+      this.esperResults.push(message);
+          this.cd.detectChanges();  
+    });
     }
 
     private customHintFunction(editor: any): any {
@@ -275,9 +280,12 @@ export class QuerybuilderComponent implements AfterViewInit, OnInit {
 
     editEpl() {
         const selectedRow = this.table.selection;
-        const name = selectedRow.Name;
-        const queryString = selectedRow.Query;
+        console.log('editing selected row: ' + JSON.stringify(selectedRow));
+        const name = selectedRow.name;
+        console.log('name: ' + name);
+        const queryString = selectedRow.query;
         var decodedString = queryString;
+        console.log('decoded string: ' + decodedString);
         try{
             decodedString = decodeURIComponent(queryString);
         }
@@ -306,13 +314,22 @@ export class QuerybuilderComponent implements AfterViewInit, OnInit {
         this.showConfirmDialog = true;
       }
 
-    addStream(shortName: string, queryString: string, stateString: string): Observable<any> {
-        const apiUrl = `/api/Streams?name=${shortName}&query=${queryString}&state=${stateString}`;
-        return this.http.post(apiUrl, null);
+      addStream(shortName: string, queryString: string, stateString: string): Observable<any> {
+        const apiUrl = `/api/streams/post`;
+        const body = {
+            name: shortName,
+            query: queryString,
+            state: stateString
+        };
+        const headers = new HttpHeaders({
+          'Content-Type': 'application/json'
+      });
+      return this.http.post(apiUrl, body, { headers });
     }
+    
 
     fetchEplListing() {
-        this.http.get<ApiResponse>('/api/Streams').subscribe(response => {
+        this.http.get<ApiResponse>('/api/streams').subscribe(response => {
             this.eplListing = response.response;
             console.log(JSON.stringify(this.eplListing))
         });

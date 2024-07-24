@@ -37,7 +37,7 @@ export class DashboardComponent implements OnInit, OnDestroy {
         this.subscription = this.layoutService.configUpdate$.subscribe(() => {
             this.initChart();
         });
-        http.get<KPI>('/api/EsperService/1').subscribe(result => {
+        http.get<KPI>('/api/EsperService/').subscribe(result => {
             this.kpi = result;
         }, error => console.error(error));
         this.updateInterval = setInterval(() => this.addData(), 1000);
@@ -88,7 +88,7 @@ export class DashboardComponent implements OnInit, OnDestroy {
 
     addData() {
 
-        this.http.get<KPI>('/api/EsperService/1').subscribe(result => {
+        this.http.get<KPI>('/api/EsperService/').subscribe(result => {
             this.kpi = result;
         }, error => console.error(error));
         if (this.chartData.datasets[0].data.length > 59) {

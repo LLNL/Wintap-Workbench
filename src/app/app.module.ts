@@ -25,13 +25,18 @@ import { BadgeModule } from 'primeng/badge';
 import { CardModule } from 'primeng/card';
 import { DividerModule } from 'primeng/divider';
 import { DropdownModule } from 'primeng/dropdown';
+import { ScrollPanelModule } from 'primeng/scrollpanel';
 import { InputSwitchModule } from 'primeng/inputswitch';
 import { EtwExplorerComponent } from './etw-explorer/etw-explorer.component';
+import { ChatComponent } from './chat/chat.component';
+import { HubConnectionBuilder } from '@microsoft/signalr';
+import { ProgressSpinnerModule } from 'primeng/progressspinner';
+
 
 
 @NgModule({
     declarations: [
-        AppComponent, NotfoundComponent, QuerybuilderComponent, TreeviewComponent, EtwExplorerComponent
+        AppComponent, NotfoundComponent, QuerybuilderComponent, TreeviewComponent, EtwExplorerComponent, ChatComponent
     ],
     imports: [
         AppRoutingModule,
@@ -54,11 +59,14 @@ import { EtwExplorerComponent } from './etw-explorer/etw-explorer.component';
         CardModule,
         DividerModule,
         DropdownModule,
-        InputSwitchModule
+        InputSwitchModule,
+        ScrollPanelModule,
+        ProgressSpinnerModule
     ],
     providers: [
         DatePipe,
-        { provide: LocationStrategy, useClass: HashLocationStrategy }
+        HubConnectionBuilder,
+        { provide: LocationStrategy, useClass: HashLocationStrategy },
     ],
     bootstrap: [AppComponent]
 })
